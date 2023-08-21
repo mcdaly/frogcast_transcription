@@ -9,12 +9,14 @@ packages = [{include = "frogcast_transcription"}]
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
 pydub = "^0.25.1"
-speechrecognition = "^3.10.0"
 pyinstaller = "^5.13.0"
 ffprobe = "^0.5"
 ffmpeg = "^1.4"
 loguru = "^0.7.0"
 tqdm = "^4.66.1"
+speechrecognition = "^3.10.0"
+openai-whisper = {git = "https://github.com/openai/whisper"}
+static-ffmpeg = "^2.5"
 
 
 [build-system]
