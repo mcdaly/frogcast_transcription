@@ -15,7 +15,7 @@ def transcribe_and_output_text(audio_path: str, output_folder: str = None, outpu
     with open(output_filepath, "w") as output_file:
         output_file.write(transcription)
 
-    print(f"Transcription with timestamps completed. Output saved to {output_path}")
+    logger.success(f"Transcription with timestamps completed. Output saved to {output_filepath}")
 
 
 def transcribe_audio_with_timestamps(audio_path: str, timestamp_increment_s: float = 30):
