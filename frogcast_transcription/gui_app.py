@@ -32,7 +32,22 @@ class AudioTranscriptionApp:
         self.logo_image = ImageTk.PhotoImage(resized_logo)
 
         self.logo_label = tk.Label(root, image=self.logo_image)
-        self.logo_label.grid(row=0, column=0, rowspan=6, padx=10, pady=10)
+        self.logo_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="w")
+
+        self.model_size_label = tk.Label(root, text="Model Size:")
+        self.model_size_label.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+
+        self.model_size_var = tk.StringVar(value="base")
+        self.model_size_options = ["tiny", "base", "small", "medium", "large"]
+        self.model_size_dropdown = ttk.Combobox(root, textvariable=self.model_size_var, values=self.model_size_options, width=8, state="readonly")
+        self.model_size_dropdown.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky="w")
+
+        self.time_interval_label = tk.Label(root, text="Time Interval (seconds):")
+        self.time_interval_label.grid(row=4, column=0, padx=10, pady=5, sticky="w")
+
+        self.time_interval_var = tk.IntVar(value=30)
+        self.time_interval_spinbox = tk.Spinbox(root, textvariable=self.time_interval_var, from_=1, to=300, width=8, state="readonly")
+        self.time_interval_spinbox.grid(row=5, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
         self.browse_button = tk.Button(root, text="Select Audio File", command=self.browse_file)
         self.browse_button.config(bg="light blue")
@@ -106,7 +121,11 @@ class AudioTranscriptionApp:
         output_filename = f"{audio_name_without_extension}_transcription_{current_date}.txt"
         output_filepath = os.path.join(self.output_folder, output_filename)
 
-        transcribe_and_output_text(audio_path=self.audio_path, output_filepath=output_filepath)
+        model_size = self.model_size_var.get()
+        time_interval = self.time_interval_var.get()
+
+        transcribe_and_output_text(audio_path=self.audio_path, output_filepath=output_filepath,
+                                   whisper_model=model_size, timestamp_increment_s=time_interval)
 
         # Display the transcribed text in the text widget
         with open(os.path.join(self.output_folder, output_filename), "r") as file:
