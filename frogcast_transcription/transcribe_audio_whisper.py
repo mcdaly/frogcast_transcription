@@ -4,18 +4,19 @@ import whisper
 import os
 
 
-def transcribe_and_output_text(audio_path: str, output_folder: str = None, output_filename: str = None, timestamp_increment_s: float = 30):
+def transcribe_and_output_text(audio_path: str, output_filepath: str = None, timestamp_increment_s: float = 30):
     transcription = transcribe_audio_with_timestamps(audio_path, timestamp_increment_s)
 
-    output_filename = "transcribed_text_with_timestamps.txt" if output_filename is None else output_filename
-    if output_folder is None:
-        output_filepath = output_filename
-    else:
-        output_filepath = os.path.join(output_folder, output_filename)
+    if output_filepath is None:
+        output_filepath = "transcribed_text_with_timestamps.txt"
+
+    # Check if the output folder exists, and create parent directories if not
+    os.makedirs(os.path.dirname(output_filepath), exist_ok=True)
+
     with open(output_filepath, "w") as output_file:
         output_file.write(transcription)
 
-    logger.success(f"Transcription with timestamps completed. Output saved to {output_filepath}")
+    logger.success(f"Transcription with timestamps completed.\nOutput saved to {output_filepath}")
 
 
 def transcribe_audio_with_timestamps(audio_path: str, timestamp_increment_s: float = 30):
@@ -23,7 +24,7 @@ def transcribe_audio_with_timestamps(audio_path: str, timestamp_increment_s: flo
     wav_audio_file = convert_m4a_to_wav(m4a_audio_path=audio_path)
 
     model = whisper.load_model("base")
-    result = model.transcribe(wav_audio_file)
+    result = model.transcribe(wav_audio_file, verbose=True)
 
     final_text = format_transcription(transcription_data=result["segments"],
                                       interval=timestamp_increment_s)
