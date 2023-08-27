@@ -85,7 +85,7 @@ class AudioTranscriptionApp:
             self.root.grid_columnconfigure(i, weight=1)
 
     def browse_file(self):
-        file_path = filedialog.askopenfilename(filetypes=[("Audio Files", "*.m4a")])
+        file_path = filedialog.askopenfilename(filetypes=[("Audio Files", "*.m4a"), ("Audio Files", "mp3")])
         if file_path:
             self.audio_path = file_path
             self.audio_path_label.config(text=file_path)

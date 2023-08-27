@@ -21,7 +21,7 @@ def transcribe_and_output_text(audio_path: str, output_filepath: str = None, whi
 
 def transcribe_audio_with_timestamps(audio_path: str, whisper_model: str = "base", timestamp_increment_s: float = 30):
     # Convert m4a to wav file
-    wav_audio_file = convert_m4a_to_wav(m4a_audio_path=audio_path)
+    wav_audio_file = convert_m4a_to_wav(audio_path=audio_path)
 
     model = whisper.load_model(whisper_model)
     result = model.transcribe(wav_audio_file, verbose=True)
@@ -67,10 +67,11 @@ def format_transcription(transcription_data, interval: float = 30):
     return "\n".join(formatted_text)
 
 
-def convert_m4a_to_wav(m4a_audio_path: str, wav_audio_path: str = "converted_audio.wav"):
+def convert_m4a_to_wav(audio_path: str, wav_audio_path: str = "converted_audio.wav"):
     # Convert m4a to wav
-    logger.info(f"Converting {m4a_audio_path} to {wav_audio_path}")
-    audio = AudioSegment.from_file(m4a_audio_path, format="m4a")
+    logger.info(f"Converting {audio_path} to {wav_audio_path}")
+    file_extension = os.path.splitext(audio_path)[1][1:]
+    audio = AudioSegment.from_file(audio_path, format=file_extension)
     audio.export(wav_audio_path, format="wav")
     return wav_audio_path
 
