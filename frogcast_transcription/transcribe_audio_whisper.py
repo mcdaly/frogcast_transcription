@@ -4,8 +4,8 @@ import whisper
 import os
 
 
-def transcribe_and_output_text(audio_path: str, output_filepath: str = None, timestamp_increment_s: float = 30):
-    transcription = transcribe_audio_with_timestamps(audio_path, timestamp_increment_s)
+def transcribe_and_output_text(audio_path: str, output_filepath: str = None, whisper_model: str = "base", timestamp_increment_s: float = 30):
+    transcription = transcribe_audio_with_timestamps(audio_path, whisper_model=whisper_model, timestamp_increment_s=timestamp_increment_s)
 
     if output_filepath is None:
         output_filepath = "transcribed_text_with_timestamps.txt"
@@ -19,11 +19,11 @@ def transcribe_and_output_text(audio_path: str, output_filepath: str = None, tim
     logger.success(f"Transcription with timestamps completed.\nOutput saved to {output_filepath}")
 
 
-def transcribe_audio_with_timestamps(audio_path: str, timestamp_increment_s: float = 30):
+def transcribe_audio_with_timestamps(audio_path: str, whisper_model: str = "base", timestamp_increment_s: float = 30):
     # Convert m4a to wav file
     wav_audio_file = convert_m4a_to_wav(m4a_audio_path=audio_path)
 
-    model = whisper.load_model("base")
+    model = whisper.load_model(whisper_model)
     result = model.transcribe(wav_audio_file, verbose=True)
 
     final_text = format_transcription(transcription_data=result["segments"],

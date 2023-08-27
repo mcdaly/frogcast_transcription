@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import ttk
 import threading  # Import the threading module
 from PIL import Image, ImageTk  # Import Image and ImageTk from PIL (Pillow)
 from datetime import datetime
@@ -8,6 +9,7 @@ import subprocess
 import sys
 import io
 from frogcast_transcription.transcribe_audio_whisper import transcribe_and_output_text
+from frogcast_transcription.definitions import LOGO_FILEPATH
 
 
 class TextRedirector(io.TextIOBase):
@@ -25,7 +27,7 @@ class AudioTranscriptionApp:
         self.root = root
         self.root.title("Transcribe Audio")
 
-        original_logo = Image.open("/Users/mikedaly/frogcast_transcription/daly_joe_frogcast_logo.png")
+        original_logo = Image.open(LOGO_FILEPATH)
         resized_logo = original_logo.resize((150, 150), Image.ANTIALIAS)
         self.logo_image = ImageTk.PhotoImage(resized_logo)
 
