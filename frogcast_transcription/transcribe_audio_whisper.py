@@ -5,7 +5,7 @@ import os
 
 
 def transcribe_and_output_text(audio_path: str, output_filepath: str = None, whisper_model: str = "base", timestamp_increment_s: float = 30):
-    transcription = transcribe_audio_with_timestamps(audio_path, whisper_model=whisper_model, timestamp_increment_s=timestamp_increment_s)
+    transcription_text = transcribe_audio_with_timestamps(audio_path, whisper_model=whisper_model, timestamp_increment_s=timestamp_increment_s)
 
     if output_filepath is None:
         output_filepath = "transcribed_text_with_timestamps.txt"
@@ -14,7 +14,7 @@ def transcribe_and_output_text(audio_path: str, output_filepath: str = None, whi
     os.makedirs(os.path.dirname(output_filepath), exist_ok=True)
 
     with open(output_filepath, "w") as output_file:
-        output_file.write(transcription)
+        output_file.write(transcription_text)
 
     logger.success(f"Transcription with timestamps completed.\nOutput saved to {output_filepath}")
 
@@ -47,8 +47,8 @@ def format_transcription(transcription_data, interval: float = 30):
         if cur_time + interval < current_group['end']:
             if current_group['texts']:
                 formatted_text.append(
-                    f"Start: {current_group['start']:.2f}s | "
-                    f"End: {current_group['end']:.2f}s | "
+                    f"Start: {format_time(current_group['start'])} | "
+                    f"End: {format_time(current_group['end'])} | "
                     f"Text: {' '.join(current_group['texts'])}"
                 )
             current_group = {'start': start_time, 'end': end_time, 'texts': []}
@@ -59,12 +59,20 @@ def format_transcription(transcription_data, interval: float = 30):
 
     if current_group['texts']:
         formatted_text.append(
-            f"Start: {current_group['start']:.2f}s | "
-            f"End: {current_group['end']:.2f}s | "
+            f"Start: {format_time(current_group['start'])} | "
+            f"End: {format_time(current_group['end'])} | "
             f"Text: {' '.join(current_group['texts'])}"
         )
 
     return "\n".join(formatted_text)
+
+
+def format_time(seconds: int) -> str:
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    seconds_str = f"{(seconds % 60):.0f}"
+    seconds_zero_padded = seconds_str.zfill(2)  # Total of 2 characters (including decimal point)
+    return f"{hours:02d}:{minutes:02d}:{seconds_zero_padded}"
 
 
 def convert_m4a_to_wav(audio_path: str, wav_audio_path: str = "converted_audio.wav"):

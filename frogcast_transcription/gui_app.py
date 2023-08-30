@@ -8,6 +8,7 @@ import os
 import subprocess
 import sys
 import io
+
 from frogcast_transcription.transcribe_audio_whisper import transcribe_and_output_text
 from frogcast_transcription.definitions import LOGO_FILEPATH
 
@@ -25,6 +26,7 @@ class TextRedirector(io.TextIOBase):
 class AudioTranscriptionApp:
     def __init__(self, root):
         self.root = root
+        self.output_filepath = None
         self.root.title("Transcribe Audio")
 
         original_logo = Image.open(LOGO_FILEPATH)
@@ -119,12 +121,12 @@ class AudioTranscriptionApp:
         current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
         output_filename = f"{audio_name_without_extension}_transcription_{current_date}.txt"
-        output_filepath = os.path.join(self.output_folder, output_filename)
+        self.output_filepath = os.path.join(self.output_folder, output_filename)
 
         model_size = self.model_size_var.get()
         time_interval = self.time_interval_var.get()
 
-        transcribe_and_output_text(audio_path=self.audio_path, output_filepath=output_filepath,
+        transcribe_and_output_text(audio_path=self.audio_path, output_filepath=self.output_filepath,
                                    whisper_model=model_size, timestamp_increment_s=time_interval)
 
         # Display the transcribed text in the text widget
@@ -134,15 +136,10 @@ class AudioTranscriptionApp:
             self.transcription_text.insert(tk.END, transcription_text)
 
     def open_text_file(self):
-        if hasattr(self, "output_folder"):
-            audio_base_name = os.path.basename(self.audio_path)
-            audio_name_without_extension = os.path.splitext(audio_base_name)[0]
-            current_date = datetime.now().strftime("%Y-%m-%d")
-            output_filename = f"{audio_name_without_extension}_transcription_{current_date}.txt"
-            text_file_path = os.path.join(self.output_folder, output_filename)
-
-            if os.path.exists(text_file_path):
-                subprocess.run(["open", text_file_path], check=True)  # Open the file with the default text editor/browser
+        if hasattr(self, "output_filepath"):
+            if os.path.exists(self.output_filepath):
+                # Open the file with the default text editor/browser
+                subprocess.run(["open", self.output_filepath], check=True)
 
 
 if __name__ == "__main__":
