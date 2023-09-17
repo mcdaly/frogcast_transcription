@@ -65,10 +65,10 @@ def format_transcription(transcription_data, interval: float = 30):
         formatted_text.append(
             f"Start: {format_time(current_group['start'])} | "
             f"End: {format_time(current_group['end'])} | "
-            f"Text: {' '.join(current_group['texts'])}\n"
+            f"Text: {' '.join(current_group['texts'])}"
         )
 
-    return "\n".join(formatted_text)
+    return "\n\n".join(formatted_text)
 
 
 def format_time(seconds: int) -> str:
