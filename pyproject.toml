@@ -16,6 +16,8 @@ tqdm = "^4.66.1"
 speechrecognition = "^3.10.0"
 openai-whisper = {git = "https://github.com/openai/whisper"}
 static-ffmpeg = "^2.5"
+pillow = "^10.0.0"
+ffmpeg = "^1.4"
 
 
 [build-system]

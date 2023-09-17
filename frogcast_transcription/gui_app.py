@@ -30,7 +30,7 @@ class AudioTranscriptionApp:
         self.root.title("Transcribe Audio")
 
         original_logo = Image.open(LOGO_FILEPATH)
-        resized_logo = original_logo.resize((150, 150), Image.ANTIALIAS)
+        resized_logo = original_logo.resize((150, 150), Image.Resampling.LANCZOS)
         self.logo_image = ImageTk.PhotoImage(resized_logo)
 
         self.logo_label = tk.Label(root, image=self.logo_image)

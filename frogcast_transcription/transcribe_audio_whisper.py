@@ -21,7 +21,11 @@ def transcribe_and_output_text(audio_path: str, output_filepath: str = None, whi
 
 def transcribe_audio_with_timestamps(audio_path: str, whisper_model: str = "base", timestamp_increment_s: float = 30):
     # Convert m4a to wav file
-    wav_audio_file = convert_m4a_to_wav(audio_path=audio_path)
+    try:
+        wav_audio_file = convert_m4a_to_wav(audio_path=audio_path)
+    except Exception as e:
+        print("Error during audio conversion:", e)
+        raise e  # Reraise the exception to see the full traceback
 
     model = whisper.load_model(whisper_model)
     result = model.transcribe(wav_audio_file, verbose=True)
@@ -61,7 +65,7 @@ def format_transcription(transcription_data, interval: float = 30):
         formatted_text.append(
             f"Start: {format_time(current_group['start'])} | "
             f"End: {format_time(current_group['end'])} | "
-            f"Text: {' '.join(current_group['texts'])}"
+            f"Text: {' '.join(current_group['texts'])}\n"
         )
 
     return "\n".join(formatted_text)
